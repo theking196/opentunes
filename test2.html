@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Picture-in-Picture (PiP) Element</title>
+    <style>
+        /* Custom styles for the video player and controls */
+        #customPiPContainer {
+            position: relative;
+            width: 600px; /* Adjust as needed */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        #customPiPVideo {
+            width: 100%;
+        }
+        #pipControls {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+        #pipControls button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="customPiPContainer">
+        <video id="customPiPVideo" controls>
+            <source src="user_assets/theking_667d5db115f70/videos/videos/Aladdin_and_the_King_of_Thieves_1996_BluRay_high_fzmoviesnet_62a90f67445f519c3e3cacec61c677b666884312b7c1e/main.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div id="pipControls">
+            <button id="exitPipButton">Exit PiP</button>
+            <button id="playPauseButton">Play/Pause</button>
+            <!-- Add more controls as needed -->
+        </div>
+    </div>
+
+    <button id="pipButton">Enter PiP</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // JavaScript/jQuery code will go here
+        $(document).ready(function() {
+    var video = document.getElementById('customPiPVideo');
+    var pipControls = document.getElementById('pipControls');
+
+    // Function to toggle PiP mode
+    function togglePiP() {
+        if (document.pictureInPictureElement) {
+            document.exitPictureInPicture().catch(error => {
+                console.error('Error exiting PiP mode:', error);
+            });
+        } else {
+            video.requestPictureInPicture().catch(error => {
+                console.error('Error entering PiP mode:', error);
+            });
+        }
+    }
+
+    // Button click event to toggle PiP mode
+    $('#pipButton').click(function() {
+        togglePiP();
+    });
+
+    // Update PiP button text based on PiP state
+    video.addEventListener('enterpictureinpicture', () => {
+        $('#pipButton').text('Exit PiP');
+        pipControls.style.display = 'block'; // Show custom PiP controls
+    });
+
+    video.addEventListener('leavepictureinpicture', () => {
+        $('#pipButton').text('Enter PiP');
+        pipControls.style.display = 'none'; // Hide custom PiP controls
+    });
+
+    // Custom PiP control events (example: Play/Pause button)
+    $('#playPauseButton').click(function() {
+        if (video.paused) {
+            video.play();
+            $('#playPauseButton').text('Pause');
+        } else {
+            video.pause();
+            $('#playPauseButton').text('Play');
+        }
+    });
+
+    // Exit PiP button event
+    $('#exitPipButton').click(function() {
+        document.exitPictureInPicture().catch(error => {
+            console.error('Error exiting PiP mode:', error);
+        });
+    });
+});
+
+    </script>
+</body>
+</html>
